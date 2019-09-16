@@ -20,7 +20,7 @@ const auth = require('./middleware/auth');
 const admin = require('./middleware/admin');
 
 // mongoose.Promise = global.Promise;
-mongoose.connect(process.env.DATABASE, {
+mongoose.connect(process.env.MONGODB_URI, {
    useNewUrlParser: true,
    useFindAndModify: false,
    useCreateIndex: true,
@@ -30,6 +30,8 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
+
+app.use(express.static('client/build'));
 
 cloudinary.config({
    cloud_name: process.env.CLOUD_NAME,
@@ -405,6 +407,14 @@ app.post('/api/site/site_data', auth, admin, (req, res) => {
       }
    );
 });
+
+// Default
+if (process.env.NODE_ENV === 'production') {
+   const path = require('path');
+   app.get('/*', (req, res) =>
+      res.sendfile(path.resolve(__dirname, '../client', 'build', 'index.html'))
+   );
+}
 
 const port = process.env.PORT || 3002;
 
