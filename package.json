@@ -9,6 +9,9 @@
       "client": "npm run start --prefix client",
       "dev": "concurrently \"yarn server\" \"yarn client\""
    },
+   "engines": {
+      "node": "12.10.0"
+   },
    "devDependencies": {
       "nodemon": "^1.19.1"
    },
